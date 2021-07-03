@@ -1571,3 +1571,8 @@ section {
 #footer .footer-links a:hover {
   color: #3498db;
 }
+
+#myMap {
+  width: 100%;
+  height: 60vh;
+}

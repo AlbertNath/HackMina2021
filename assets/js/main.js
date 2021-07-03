@@ -242,6 +242,105 @@
     }
   });
 
+  function GetMap(){
+    
+    //Instantiate a map object
+    var map = new atlas.Map("myMap", {
+    //Add your Azure Maps subscription key to the map SDK. Get an Azure Maps key at https://azure.com/maps
+    authOptions: {
+      authType: 'subscriptionKey',
+      subscriptionKey: 'o36tJJgBki5kuJsmKFNVtG1CQuuf9rtp9MfDXIGn0MY'
+      } 
+    });
+
+    //Wait until the map resources are ready.
+    map.events.add('ready', function() {
+
+      //Create a data source and add it to the map.
+      var datasource = new atlas.source.DataSource();
+      map.sources.add(datasource);
+
+      //Add a layer for rendering point data.
+      var resultLayer = new atlas.layer.SymbolLayer(datasource, null, {
+          iconOptions: {
+              image: 'pin-round-darkblue',
+              anchor: 'center',
+              allowOverlap: true
+          },
+          textOptions: {
+              anchor: "top"
+          }
+      });
+
+      map.layers.add(resultLayer);
+      // Use SubscriptionKeyCredential with a subscription key
+      var subscriptionKeyCredential = new atlas.service.SubscriptionKeyCredential(atlas.getSubscriptionKey());
+
+      // Use subscriptionKeyCredential to create a pipeline
+      var pipeline = atlas.service.MapsURL.newPipeline(subscriptionKeyCredential);
+
+      // Construct the SearchURL object
+      var searchURL = new atlas.service.SearchURL(pipeline);
+
+      //Create a popup but leave it closed so we can update it and display it later.
+      var popup = new atlas.Popup();
+
+      function showPopup(e) {
+        //Get the properties and coordinates of the first shape that the event occurred on.
+    
+        var p = e.shapes[0].getProperties();
+        var position = e.shapes[0].getCoordinates();
+        var rand = Math.round(Math.random() * 10);
+        var randViews = Math.round(Math.random() * 5000);
+
+        //Create HTML from properties of the selected result.
+        var html = `
+          <div style="padding:5px">
+            <div><b>${p.poi.name}</b></div>
+            <div>${p.address.freeformAddress}</div>
+            <div>${position[1]}, ${position[0]}</div>
+            <div><b>Calificación:</b>${rand}</div>
+            <div><b>Reviews:</b>${randViews}</div>
+          </div>`;
+    
+        //Update the content and position of the popup.
+        popup.setPopupOptions({
+            content: html,
+            position: position
+        });
+    
+        //Open the popup.
+        popup.open(map);
+      }
+
+      //Add a mouse over event to the result layer and display a popup when this event fires.
+      map.events.add('mouseover', resultLayer, showPopup);
+
+      var query = 'bank';
+      var radius = 1000000;
+      var lat = 19.4978;
+      var lon = -99.1269;
+
+      searchURL.searchPOI(atlas.service.Aborter.timeout(10000), query, {
+          limit: 100,
+          lat: lat,
+          lon: lon,
+          radius: radius
+      }).then((results) => {
+
+      // Extract GeoJSON feature collection from the response and add it to the datasource
+      var data = results.geojson.getFeatures();
+      datasource.add(data);
+
+      // set camera to bounds to show the results
+      map.setCamera({
+          bounds: data.bbox,
+          zoom: 1
+          });
+      });
+    });
+  }
+
   /**
    * Animation on scroll
    */
@@ -251,7 +350,8 @@
       easing: 'ease-in-out',
       once: true,
       mirror: false
-    })
+    });
+    GetMap();
   });
 
 })()
