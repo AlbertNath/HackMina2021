@@ -355,3 +355,12 @@
   });
 
 })()
+
+function openForm() {
+  console.log("Hola mundo");
+  document.getElementById("bot").style.display = "block";
+}
+
+function closeForm() {
+  document.getElementById("bot").style.display = "none";
+}
