@@ -1,6 +1,8 @@
+<div align="center">
 # Hack Mina 2021
 ## SecureATM
-
+![SecureATM](https://github.com/AlbertNath/HackMina2021)
+</div>
 Proyecto realizado para el hackaton [Hack Mina 2021](https://www.facebook.com/hackmina21).
 
 **SecureATM** es un proyecto con la finalidad de que los usuarios de cajeros automáticos
