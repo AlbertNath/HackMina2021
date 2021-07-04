@@ -1,9 +1,11 @@
 <div align="center">
-# Hack Mina 2021
+
+  # Hack Mina 2021
   
 ## SecureATM
   
-![SecureATM](https://github.com/AlbertNath/HackMina2021)
+![SecureATM](https://github.com/AlbertNath/HackMina2021/blob/main/assets/img/WebApp.png)
+
 </div>
 Proyecto realizado para el hackaton [Hack Mina 2021](https://www.facebook.com/hackmina21).
 
